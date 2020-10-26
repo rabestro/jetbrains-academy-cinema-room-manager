@@ -7,12 +7,14 @@ public class ScreenRoom {
     public static final int MAX_ROWS = 9;
     public static final int MAX_COLS = 9;
     public static final int SMALL_ROOM = 60;
-    public static final int NORMAL_PRICE = 10;
-    public static final int DISCOUNTED_PRICE = 8;
+    public static final int HIGH_PRICE = 10;
+    public static final int LOW_PRICE = 8;
+    public static final int EXTRA_PRICE = HIGH_PRICE - LOW_PRICE;
 
     private final int rows;
     private final int cols;
     private final BitSet seats;
+    private final int expensiveSeats;
 
     public ScreenRoom(int rows, int cols) {
         checkIndex(rows - 1, MAX_ROWS);
@@ -20,20 +22,19 @@ public class ScreenRoom {
         this.rows = rows;
         this.cols = cols;
         seats = new BitSet(rows * cols);
+        expensiveSeats = isSmallRoom() ? totalSeats() : rows / 2 * cols;
     }
 
     public int book(int row, int col) {
-        checkIndex(--row, rows);
-        checkIndex(--col, cols);
         seats.set(row * cols + col);
-        return isSmallRoom() || (row < rows / 2) ? NORMAL_PRICE : DISCOUNTED_PRICE;
+        return isSmallRoom() || (row < rows / 2) ? HIGH_PRICE : LOW_PRICE;
     }
 
     public SeatState getSeatState(int row, int col) {
         if (row < 1 || row > rows || col < 1 || col > cols) {
             return SeatState.WRONG;
         }
-        final var index = --row * cols + --col;
+        final var index = (row - 1) * cols + col - 1;
         return seats.get(index) ? SeatState.BOOKED : SeatState.SEAT_FREE;
     }
 
@@ -54,17 +55,11 @@ public class ScreenRoom {
     }
 
     public int incomeCurrent() {
-        if (isSmallRoom()) {
-            return ticketsSold() * NORMAL_PRICE;
-        }
-        return ticketsSold() * DISCOUNTED_PRICE + seats.get(0, rows / 2 * cols).cardinality() * 2;
+        return ticketsSold() * LOW_PRICE + seats.get(0, expensiveSeats).cardinality() * EXTRA_PRICE;
     }
 
     public int incomeTotal() {
-        if (isSmallRoom()) {
-            return totalSeats() * NORMAL_PRICE;
-        }
-        return totalSeats() * DISCOUNTED_PRICE + rows / 2 * cols * 2;
+        return totalSeats() * LOW_PRICE + expensiveSeats * EXTRA_PRICE;
     }
 
     @Override

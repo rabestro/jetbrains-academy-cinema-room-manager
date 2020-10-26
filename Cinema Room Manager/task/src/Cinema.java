@@ -20,7 +20,6 @@ public class Cinema {
                 .add("Statistics", Cinema::statistics)
                 .addExit()
                 .run();
-
     }
 
     private static void statistics() {
