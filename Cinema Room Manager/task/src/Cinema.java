@@ -11,6 +11,9 @@ public class Cinema {
         System.out.println("Enter the number of seats in each row:");
         final var cols = scanner.nextInt();
 
+        final var screenRoom = new ScreenRoom(rows, cols);
+        System.out.println(screenRoom);
+
         final var seats = rows * cols;
 
         final var income = seats > 60
