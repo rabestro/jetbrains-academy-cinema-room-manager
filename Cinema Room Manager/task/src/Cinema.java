@@ -1,19 +1,26 @@
 import java.util.Scanner;
 
 public class Cinema {
+    private static Scanner scanner = new Scanner(System.in);
+    private static ScreenRoom screenRoom;
 
     public static void main(String[] args) {
-        final var scanner = new Scanner(System.in);
-
         System.out.println("Enter the number of rows:");
         final var rows = scanner.nextInt();
 
         System.out.println("Enter the number of seats in each row:");
         final var cols = scanner.nextInt();
+        screenRoom = new ScreenRoom(rows, cols);
 
-        final var screenRoom = new ScreenRoom(rows, cols);
-        System.out.println(screenRoom);
+        Menu.create()
+                .add("Show the seats", () -> System.out.println(screenRoom))
+                .add("Buy a ticket", Cinema::buyTicket)
+                .addExit()
+                .run();
 
+    }
+
+    private static void buyTicket() {
         System.out.println("Enter a row number:");
         final var row = scanner.nextInt();
 
@@ -22,7 +29,5 @@ public class Cinema {
 
         final var price = screenRoom.book(row, col);
         System.out.println("Ticket price: $" + price);
-        System.out.println(screenRoom);
-
     }
 }
