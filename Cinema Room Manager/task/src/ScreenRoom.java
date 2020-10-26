@@ -26,10 +26,32 @@ public class ScreenRoom {
         return (rows * cols <= 60) || (row < rows / 2) ? 10 : 8;
     }
 
-    public char getSeatState(int row, int col) {
-        checkIndex(--row, rows);
-        checkIndex(--col, cols);
-        return seats.get(row * cols + col) ? 'B' : 'S';
+    public SeatState getSeatState(int row, int col) {
+        if (row < 1 || row > rows || col < 1 || col > cols) {
+            return SeatState.INCORRECT;
+        }
+        final var index = --row * cols + --col;
+        return seats.get(index) ? SeatState.BOOKED : SeatState.SEAT_FREE;
+    }
+
+    public int ticketsSold() {
+        return seats.cardinality();
+    }
+
+    public int totalSeats() {
+        return rows * cols;
+    }
+
+    public double getPercentage() {
+        return (double) ticketsSold() / totalSeats();
+    }
+
+    public int incomeCurrent() {
+        return 0;
+    }
+
+    public int incomeTotal() {
+        return 0;
     }
 
     @Override
@@ -39,9 +61,13 @@ public class ScreenRoom {
         for (int row = 1; row <= rows; row++) {
             result.append(lineSeparator()).append(row);
             for (int col = 1; col <= cols; col++) {
-                result.append(" ").append(getSeatState(row, col));
+                result.append(" ").append(getSeatState(row, col).name().charAt(0));
             }
         }
         return result.append(lineSeparator()).toString();
+    }
+
+    public static enum SeatState {
+        SEAT_FREE, BOOKED, INCORRECT
     }
 }
