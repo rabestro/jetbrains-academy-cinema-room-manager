@@ -19,10 +19,11 @@ public class ScreenRoom {
         seats = new BitSet(rows * cols);
     }
 
-    public void book(int row, int col) {
+    public int book(int row, int col) {
         checkIndex(--row, rows);
         checkIndex(--col, cols);
         seats.set(row * cols + col);
+        return (rows * cols <= 60) || (row < rows / 2) ? 10 : 8;
     }
 
     public char getSeatState(int row, int col) {
@@ -41,6 +42,6 @@ public class ScreenRoom {
                 result.append(" ").append(getSeatState(row, col));
             }
         }
-        return result.toString();
+        return result.append(lineSeparator()).toString();
     }
 }

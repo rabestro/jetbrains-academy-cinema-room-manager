@@ -14,13 +14,15 @@ public class Cinema {
         final var screenRoom = new ScreenRoom(rows, cols);
         System.out.println(screenRoom);
 
-        final var seats = rows * cols;
+        System.out.println("Enter a row number:");
+        final var row = scanner.nextInt();
 
-        final var income = seats > 60
-                ? 8 * seats + 2 * (rows / 2 * cols)
-                : 10 * seats;
+        System.out.println("Enter a seat number in that row:");
+        final var col = scanner.nextInt();
 
-        System.out.println("Total income:");
-        System.out.println("$" + income);
+        final var price = screenRoom.book(row, col);
+        System.out.println("Ticket price: $" + price);
+        System.out.println(screenRoom);
+
     }
 }
