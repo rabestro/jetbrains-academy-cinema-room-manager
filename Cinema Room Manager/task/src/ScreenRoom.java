@@ -26,16 +26,19 @@ public class ScreenRoom {
     }
 
     public int book(int row, int col) {
-        seats.set(row * cols + col);
-        return isSmallRoom() || (row < rows / 2) ? HIGH_PRICE : LOW_PRICE;
+        seats.set(index(row, col));
+        return isSmallRoom() || (row <= rows / 2) ? HIGH_PRICE : LOW_PRICE;
     }
 
     public SeatState getSeatState(int row, int col) {
         if (row < 1 || row > rows || col < 1 || col > cols) {
             return SeatState.WRONG;
         }
-        final var index = (row - 1) * cols + col - 1;
-        return seats.get(index) ? SeatState.BOOKED : SeatState.SEAT_FREE;
+        return seats.get(index(row, col)) ? SeatState.BOOKED : SeatState.SEAT_FREE;
+    }
+
+    private int index(int row, int col) {
+        return (row - 1) * cols + col - 1;
     }
 
     public int ticketsSold() {
