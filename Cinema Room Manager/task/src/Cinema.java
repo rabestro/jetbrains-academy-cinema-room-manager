@@ -31,7 +31,7 @@ public class Cinema {
     }
 
     private static void buyTicket() {
-        for (var state = ScreenRoom.SeatState.INCORRECT; state != ScreenRoom.SeatState.SEAT_FREE; ) {
+        for (var state = ScreenRoom.SeatState.WRONG; state != ScreenRoom.SeatState.SEAT_FREE; ) {
             out.println("Enter a row number:");
             final var row = Integer.parseInt(scanner.nextLine());
 
@@ -41,7 +41,7 @@ public class Cinema {
             state = screenRoom.getSeatState(row, col);
             if (state == ScreenRoom.SeatState.BOOKED) {
                 out.println("That ticket has already been purchased!");
-            } else if (state == ScreenRoom.SeatState.INCORRECT) {
+            } else if (state == ScreenRoom.SeatState.WRONG) {
                 out.println("Wrong input!");
             } else {
                 final var price = screenRoom.book(row, col);

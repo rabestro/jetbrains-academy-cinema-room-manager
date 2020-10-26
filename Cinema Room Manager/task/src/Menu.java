@@ -16,6 +16,14 @@ import static java.text.MessageFormat.format;
  */
 public interface Menu extends Runnable {
 
+    static Menu create() {
+        return new SimpleMenu();
+    }
+
+    static Menu create(String title) {
+        return new SimpleMenu().set(Property.TITLE, title);
+    }
+
     /**
      * Set additional property for the menu.
      *
@@ -87,14 +95,6 @@ public interface Menu extends Runnable {
      * @return this menu
      */
     Menu addExit();
-
-    static Menu create() {
-        return new SimpleMenu();
-    }
-
-    static Menu create(String title) {
-        return new SimpleMenu().set(Property.TITLE, title);
-    }
 
     enum Property {
         TITLE("Choose your action:"),

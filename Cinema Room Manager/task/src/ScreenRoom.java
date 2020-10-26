@@ -6,6 +6,9 @@ import static java.util.Objects.checkIndex;
 public class ScreenRoom {
     public static final int MAX_ROWS = 9;
     public static final int MAX_COLS = 9;
+    public static final int SMALL_ROOM = 60;
+    public static final int NORMAL_PRICE = 10;
+    public static final int DISCOUNTED_PRICE = 8;
 
     private final int rows;
     private final int cols;
@@ -23,12 +26,12 @@ public class ScreenRoom {
         checkIndex(--row, rows);
         checkIndex(--col, cols);
         seats.set(row * cols + col);
-        return (rows * cols <= 60) || (row < rows / 2) ? 10 : 8;
+        return isSmallRoom() || (row < rows / 2) ? NORMAL_PRICE : DISCOUNTED_PRICE;
     }
 
     public SeatState getSeatState(int row, int col) {
         if (row < 1 || row > rows || col < 1 || col > cols) {
-            return SeatState.INCORRECT;
+            return SeatState.WRONG;
         }
         final var index = --row * cols + --col;
         return seats.get(index) ? SeatState.BOOKED : SeatState.SEAT_FREE;
@@ -46,12 +49,22 @@ public class ScreenRoom {
         return (double) ticketsSold() / totalSeats();
     }
 
+    public boolean isSmallRoom() {
+        return totalSeats() <= SMALL_ROOM;
+    }
+
     public int incomeCurrent() {
-        return 0;
+        if (isSmallRoom()) {
+            return ticketsSold() * NORMAL_PRICE;
+        }
+        return ticketsSold() * DISCOUNTED_PRICE + seats.get(0, rows / 2 * cols).cardinality() * 2;
     }
 
     public int incomeTotal() {
-        return 0;
+        if (isSmallRoom()) {
+            return totalSeats() * NORMAL_PRICE;
+        }
+        return totalSeats() * DISCOUNTED_PRICE + rows / 2 * cols * 2;
     }
 
     @Override
@@ -67,7 +80,7 @@ public class ScreenRoom {
         return result.append(lineSeparator()).toString();
     }
 
-    public static enum SeatState {
-        SEAT_FREE, BOOKED, INCORRECT
+    public enum SeatState {
+        SEAT_FREE, BOOKED, WRONG
     }
 }
